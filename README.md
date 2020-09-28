@@ -62,5 +62,5 @@ Ao parar/matar o container, o runners será removido antes de terminar o process
 ## Próximos Passos
 
 1. Automação da arquitetura para deploy do host EC2/Fargate/ECS.
-
+1. Estudar o formato com k8s + Helm [desse projeto](https://github.com/evryfs/github-actions-runner-operator) e discutir como as abordagens se complementam/competem. 
 
