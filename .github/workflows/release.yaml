@@ -1,4 +1,5 @@
-on: push
+on: 
+  push:
     branches:
       - master
 name: Release release from master tag
