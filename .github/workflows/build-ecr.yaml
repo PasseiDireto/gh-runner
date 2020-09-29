@@ -4,18 +4,19 @@ on:
       - 'v*'
 name: Builds and pushes tagged image to ECR
 jobs:
-  build:
+  build_and_push:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
       - name: Create GitHub release
         run: docker build -t gh-runner:${{ steps.get_version.outputs.VERSION }} -t latest .
-  push:
-    runs-on: ubuntu-latest
-    steps:
-    
+
       - name: Push to ECR
         id: ecr
         uses: jwalton/gh-ecr-push@v1
@@ -23,4 +24,4 @@ jobs:
           access-key-id: ${{ secrets.ECR_ACCESS_ID }}
           secret-access-key: ${{ secrets.ECR_ACCESS_KEY }}
           region: us-east-1
-          image: gh-runner:${{ steps.get_version.outputs.VERSION }}
+          image: gh-runner:${{ steps.get_version.outputs.VERSION }}    
