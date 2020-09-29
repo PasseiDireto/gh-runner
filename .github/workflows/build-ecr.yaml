@@ -1,5 +1,6 @@
 on:
-  push:
+  release:
+    types: [published]
 name: Builds and pushes tagged image to ECR
 jobs:
   build:
