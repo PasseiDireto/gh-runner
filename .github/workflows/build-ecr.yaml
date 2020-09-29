@@ -23,5 +23,5 @@ jobs:
         with:
           access-key-id: ${{ secrets.ECR_ACCESS_ID }}
           secret-access-key: ${{ secrets.ECR_ACCESS_KEY }}
-          region: us-east-1
+          region: us-east-2
           image: gh-runner:${{ steps.get_version.outputs.VERSION }}    
