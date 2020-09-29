@@ -8,6 +8,7 @@ jobs:
       - name: Create GitHub release
         run: docker build -t gh-runner:${{github.event.release.tag_name}} -t latest .
   push:
+    runs-on: ubuntu-latest
     steps:
       - name: Push to ECR
         id: ecr
