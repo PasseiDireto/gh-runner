@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create GitHub release
-        run: docker build -t gh-runner:${{github.ref//v}} -t latest .
+        run: docker build -t gh-runner:${${{github.ref}}//v} -t latest .
   push:
     runs-on: ubuntu-latest
     steps:
