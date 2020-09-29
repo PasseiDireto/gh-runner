@@ -1,0 +1,12 @@
+on:
+  release:
+    types: [published]
+- run: docker build -t gh-runner:${{github.event.release.tag_name}} -t latest .
+- name: Push to ECR
+  id: ecr
+  uses: jwalton/gh-ecr-push@v1
+  with:
+    access-key-id: ${{ secrets.ECR_ACCESS_ID }}
+    secret-access-key: ${{ secrets.ECR_ACCESS_KEY }}
+    region: us-east-1
+    image: gh-runner:${{github.event.release.tag_name}}
