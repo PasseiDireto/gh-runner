@@ -1,13 +1,14 @@
-on: 
-  release:
-    types: [created]
+on:
+  push:
+    tags:
+      - 'v*'
 name: Builds and pushes tagged image to ECR
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Create GitHub release
-        run: docker build -t gh-runner:${{github.event.release.tag_name}} -t latest .
+        run: docker build -t gh-runner:${{github.ref//v}} -t latest .
   push:
     runs-on: ubuntu-latest
     steps:
