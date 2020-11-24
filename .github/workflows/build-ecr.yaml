@@ -5,11 +5,11 @@ on:
 name: Builds and pushes tagged image to ECR
 jobs:
   build_and_push:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
@@ -24,4 +24,4 @@ jobs:
           access-key-id: ${{ secrets.ECR_ACCESS_ID }}
           secret-access-key: ${{ secrets.ECR_ACCESS_KEY }}
           region: us-east-2
-          image: gh-runner:${{ steps.get_version.outputs.VERSION }}    
+          image: gh-runner:${{ steps.get_version.outputs.VERSION }}

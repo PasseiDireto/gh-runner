@@ -1,13 +1,17 @@
 #!/bin/bash
 
+
+echo "Starting supervisor (Docker)"
+sudo service docker start
+
 if [ -n "${GITHUB_REPOSITORY}" ]
 then
     auth_url="https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPOSITORY}/actions/runners/registration-token"
-    registration_url = "https://github.com/${GITHUB_OWNER}/${GITHUB_REPOSITORY}"
-    
+    registration_url="https://github.com/${GITHUB_OWNER}/${GITHUB_REPOSITORY}"
+
 else
     auth_url="https://api.github.com/orgs/${GITHUB_OWNER}/actions/runners/registration-token"
-    registration_url= "https://github.com/${GITHUB_OWNER}"
+    registration_url="https://github.com/${GITHUB_OWNER}"
 fi
 
 echo "Requesting registration URL at '${auth_url}'"
@@ -24,12 +28,16 @@ export RUNNER_TOKEN=$(echo $payload | jq .token --raw-output)
     --replace
 
 remove() {
-    ./config.sh remove --unattended --token "${RUNNER_TOKEN}"
+   ./config.sh remove --unattended --token ${RUNNER_TOKEN}
 }
 
-trap 'remove; exit 130' INT
-trap 'remove; exit 143' TERM
+trap 'remove; exit 130' SIGINT
+trap 'remove; exit 143' SIGTERM
 
-./run.sh "$*" &
+for f in runsvc.sh RunnerService.js; do
+  mv bin/${f}{,.bak}
+  mv {patched,bin}/${f}
+done
 
-wait $!
+unset GITHUB_PERSONAL_TOKEN RUNNER_NAME RUNNER_REPO
+./bin/runsvc.sh "$*"
