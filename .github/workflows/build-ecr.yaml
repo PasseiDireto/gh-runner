@@ -28,13 +28,13 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.ECR_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-2
           AWS_PROD_ACCOUNT_ID: ${{secrets.AWS_PROD_ACCOUNT_ID}}
-          run: |
-            aws --region "${AWS_DEFAULT_REGION}" ecr get-login-password \
-              | docker login \
-                --password-stdin \
-                --username AWS \
-                  "${AWS_PROD_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-              echo ::set-output name=REPO::${AWS_PROD_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
+        run: |
+          aws --region "${AWS_DEFAULT_REGION}" ecr get-login-password \
+            | docker login \
+              --password-stdin \
+              --username AWS \
+                "${AWS_PROD_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+            echo ::set-output name=REPO::${AWS_PROD_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
       - name: Push image
         id: push
         run: |
