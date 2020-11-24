@@ -15,13 +15,28 @@ jobs:
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
       - name: Build the image with version and latest tags
-        run: docker build -t gh-runner:${{ steps.get_version.outputs.VERSION }} -t latest .
+        id: build
+        run: |
+          docker build -t gh-runner:${{ steps.get_version.outputs.VERSION }} -t latest .
+          echo ::set-output name=IMAGE::gh-runner:${{ steps.get_version.outputs.VERSION }}
 
-      - name: Push to ECR
+
+      - name: ECR Login
         id: ecr
-        uses: jwalton/gh-ecr-push@v1
-        with:
-          access-key-id: ${{ secrets.ECR_ACCESS_ID }}
-          secret-access-key: ${{ secrets.ECR_ACCESS_KEY }}
-          region: us-east-2
-          image: gh-runner:${{ steps.get_version.outputs.VERSION }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ECR_ACCESS_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ECR_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-2
+          AWS_PROD_ACCOUNT_ID: ${{secrets.AWS_PROD_ACCOUNT_ID}}
+          run: |
+            aws --region "${AWS_DEFAULT_REGION}" ecr get-login-password \
+              | docker login \
+                --password-stdin \
+                --username AWS \
+                  "${AWS_PROD_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+              echo ::set-output name=REPO::${AWS_PROD_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
+      - name: Push image
+        id: push
+        run: |
+          docker tag   ${{ steps.build.outputs.IMAGE }} ${{ steps.ecr.outputs.REPO }}/${{ steps.build.outputs.IMAGE }}
+          docker push  ${{ steps.ecr.outputs.REPO }}/${{ steps.build.outputs.IMAGE }}

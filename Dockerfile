@@ -13,6 +13,7 @@ RUN apt-get update \
     unzip \
     wget \
     zip \
+    git \
     && rm -rf /var/lib/apt/list/*
 
 
@@ -22,9 +23,10 @@ RUN adduser --disabled-password --gecos "" --uid 1000 runner \
     && usermod -aG docker runner \
     && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers
 
+
 # Build args
 ARG TARGETPLATFORM=amd64
-ARG RUNNER_VERSION=2.274.1
+ARG RUNNER_VERSION=2.274.2
 ARG DOCKER_CHANNEL=stable
 ARG DOCKER_VERSION=19.03.13
 ARG DEBUG=false
@@ -51,9 +53,14 @@ RUN chmod +x ./patched/runsvc.sh /usr/local/bin/startup.sh
 
 # Dumb Init
 RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
-    && curl -L -o /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_${ARCH} \
+    && curl -Ls  -o /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_${ARCH} \
     && chmod +x /usr/local/bin/dumb-init
 
+#AWS client
+RUN curl -Ls "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip \
+ && unzip awscliv2.zip \
+ && ./aws/install \
+ && rm -rf awscliv2.zip
 
 USER runner
 # Volume to let docker pull all images (with aufs)
