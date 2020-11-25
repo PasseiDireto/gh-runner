@@ -40,4 +40,8 @@ for f in runsvc.sh RunnerService.js; do
 done
 
 unset GITHUB_PERSONAL_TOKEN RUNNER_NAME RUNNER_REPO
-./bin/runsvc.sh "$*"
+./bin/runsvc.sh --once "$*"
+
+if [[ ! $? ]]; then
+  remove
+fi

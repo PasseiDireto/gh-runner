@@ -42,15 +42,6 @@ RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
     && ./bin/installdependencies.sh \
     && rm -rf /var/lib/apt/lists/*
 
-
-
-COPY startup.sh /usr/local/bin/
-
-# Add patched scripts from GHA runner (svc.sh and RunnerService.js)
-COPY --chown=runner:runner patched/ ./patched/
-
-RUN chmod +x ./patched/runsvc.sh /usr/local/bin/startup.sh
-
 # Dumb Init
 RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
     && curl -Ls  -o /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_${ARCH} \
@@ -61,6 +52,13 @@ RUN curl -Ls "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscl
  && unzip awscliv2.zip \
  && ./aws/install \
  && rm -rf awscliv2.zip
+
+COPY startup.sh /usr/local/bin/
+
+# Add patched scripts from GHA runner (svc.sh and RunnerService.js)
+COPY --chown=runner:runner patched/ ./patched/
+
+RUN chmod +x ./patched/runsvc.sh /usr/local/bin/startup.sh
 
 USER runner
 # Volume to let docker pull all images (with aufs)
