@@ -24,9 +24,19 @@ jobs:
   # This workflow contains a single job called "greet"
   greet:
     # The type of runner that the job will run on
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Runs a single command using the runners shell
     - name: Send greeting
       run: echo "Hello ${{ github.event.inputs.name }}, happy ${{ github.event.inputs.age }}th birthday! "
+  # This workflow contains a single job called "greet"
+  goodbye:
+    needs: greet
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Runs a single command using the runners shell
+    - name: Say goodbye
+      run: echo "Thanks ${{ github.event.inputs.name }} for coming in!"
