@@ -37,6 +37,9 @@ jobs:
     runs-on: self-hosted
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Runs a single command using the runners shell
+    - name: Set up Python Env
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
     - name: Say goodbye
       run: echo "Thanks ${{ github.event.inputs.name }} for coming in!"
