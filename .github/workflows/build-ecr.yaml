@@ -37,5 +37,5 @@ jobs:
         id: push
         run: |
           docker tag gh-runner:${{ steps.get_version.outputs.VERSION }} ${{ steps.ecr.outputs.REPO }}/gh-runner:${{ steps.get_version.outputs.VERSION }}
-          docker tag gh-runner:latest ${{ steps.ecr.outputs.REPO }}/gh-runner:latest
+          docker tag gh-runner:${{ steps.get_version.outputs.VERSION }} ${{ steps.ecr.outputs.REPO }}/gh-runner:latest
           docker push ${{ steps.ecr.outputs.REPO }}/gh-runner
