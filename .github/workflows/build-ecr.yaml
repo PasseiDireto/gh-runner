@@ -18,8 +18,6 @@ jobs:
         id: build
         run: |
           docker build -t gh-runner:${{ steps.get_version.outputs.VERSION }} -t latest .
-          echo ::set-output name=IMAGE::gh-runner:${{ steps.get_version.outputs.VERSION }}
-
 
       - name: ECR Login
         id: ecr
@@ -38,5 +36,6 @@ jobs:
       - name: Push image
         id: push
         run: |
-          docker tag   ${{ steps.build.outputs.IMAGE }} ${{ steps.ecr.outputs.REPO }}/${{ steps.build.outputs.IMAGE }}
-          docker push  ${{ steps.ecr.outputs.REPO }}/${{ steps.build.outputs.IMAGE }}
+          docker tag gh-runner:${{ steps.get_version.outputs.VERSION }} ${{ steps.ecr.outputs.REPO }}/gh-runner:${{ steps.get_version.outputs.VERSION }}
+          docker tag gh-runner:latest ${{ steps.ecr.outputs.REPO }}/gh-runner:latest
+          docker push ${{ steps.ecr.outputs.REPO }}/gh-runner
