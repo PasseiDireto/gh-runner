@@ -23,7 +23,7 @@ export RUNNER_TOKEN=$(echo $payload | jq .token --raw-output)
     --name ${RUNNER_NAME}-$(hostname) \
     --token ${RUNNER_TOKEN} \
     --url $registration_url \
-    --work ${RUNNER_WORKDIR} \
+    --work ${RUNNER_WORKDIR:-"_work"} \
     --unattended \
     --replace
 
