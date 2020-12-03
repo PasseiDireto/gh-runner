@@ -1,45 +1,28 @@
-# This is a basic workflow that is manually triggered
 
-name: Manual workflow
+name: Check GH Runner
 
-# Controls when the action will run. Workflow runs when manually triggered using the UI
-# or API.
-on:
-  workflow_dispatch:
-    # Inputs the workflow accepts.
-    inputs:
-      name:
-        # Friendly description to be shown in the UI instead of 'name'
-        description: 'Person to greet'
-        # Default value if no value is explicitly provided
-        default: 'World'
-        # Input has to be provided for the workflow to run
-        required: true
-      age:
-        description: 'His/her age'
-        required: false
+on: [workflow_dispatch]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "greet"
-  greet:
-    # The type of runner that the job will run on
+  pre-job-test:
     runs-on: ubuntu-latest
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Runs a single command using the runners shell
-    - name: Send greeting
-      run: echo "Hello ${{ github.event.inputs.name }}, happy ${{ github.event.inputs.age }}th birthday! "
-  # This workflow contains a single job called "greet"
-  goodbye:
-    needs: greet
-    # The type of runner that the job will run on
-    runs-on: self-hosted
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-    - name: Set up Python Env
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v2
+    - name: Test Trigger
+      uses: PasseiDireto/gh-runner-task-action@v1
       with:
-        python-version: 3.8
-    - name: Say goodbye
-      run: echo "Thanks ${{ github.event.inputs.name }} for coming in!"
+        github_pat: ${{ secrets.PD_BOT_GITHUB_ACCESS_TOKEN }}
+        task_definition: 'gh-runner'
+        cluster: 'gh-runner'
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.CDK_ACCESS_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.CDK_SECRET_KEY }}
+        AWS_DEFAULT_REGION:  ${{secrets.AWS_DEFAULT_REGION}}
+  runs-dummy-action:
+    runs-on: self-hosted
+    container:
+      image: python:3.9-slim
+    needs: pre-job-test
+    steps:
+    - uses: actions/checkout@v2
+    - run: python --version
