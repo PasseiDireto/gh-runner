@@ -17,7 +17,7 @@ jobs:
         token: ${{ secrets.PD_BOT_GITHUB_ACCESS_TOKEN }} # stored in GitHub secrets
         path: .github/actions/pre-job
     - name: Provide a self hosted to execute this job
-      uses: .github/actions/pre-job
+      uses: ./.github/actions/pre-job
       with:
         github_pat: ${{ secrets.PD_BOT_GITHUB_ACCESS_TOKEN }}
         task_definition: 'gh-runner'
