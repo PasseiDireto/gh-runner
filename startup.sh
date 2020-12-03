@@ -20,7 +20,7 @@ payload=$(curl -sX POST -H "Authorization: token ${GITHUB_PERSONAL_TOKEN}" ${aut
 export RUNNER_TOKEN=$(echo $payload | jq .token --raw-output)
 
 ./config.sh \
-    --name ${RUNNER_NAME}-$(hostname) \
+    --name ${RUNNER_NAME}_$(openssl rand -hex 6) \
     --token ${RUNNER_TOKEN} \
     --url $registration_url \
     --work ${RUNNER_WORKDIR:-"_work"} \
@@ -41,7 +41,4 @@ done
 
 unset GITHUB_PERSONAL_TOKEN RUNNER_NAME RUNNER_REPO
 ./bin/runsvc.sh --once "$*"
-
-if [[ ! $? ]]; then
-  remove
-fi
+remove
