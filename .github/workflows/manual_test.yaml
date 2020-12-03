@@ -1,15 +1,23 @@
 
-name: Check GH Runner
+# https://github.com/actions/checkout/issues/95
+# https://github.community/t/github-action-action-in-private-repository/16063/28
 
+name: Check GH Runner
 on: [workflow_dispatch]
 
 jobs:
   pre-job-test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Test Trigger
-      uses: PasseiDireto/gh-runner-task-action@v1
+    - name: Get Action Code
+      uses: actions/checkout@v2
+      with:
+        repository: PasseiDireto/gh-runner-task-action
+        ref: main
+        token: ${{ secrets.PD_BOT_GITHUB_ACCESS_TOKEN }} # stored in GitHub secrets
+        path: .github/actions/pre-job
+    - name: Provide a self hosted to execute this job
+      uses: .github/actions/pre-job
       with:
         github_pat: ${{ secrets.PD_BOT_GITHUB_ACCESS_TOKEN }}
         task_definition: 'gh-runner'
