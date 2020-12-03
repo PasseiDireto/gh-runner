@@ -2,13 +2,12 @@
 
 Self hosted GitHub Actions Runner.
 
-O GitHub Actions permite a [configuração de instâncias dedicadas](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/about-self-hosted-runners) para a execução das pipelines. Este projeto consiste em uma imagem docker que configura, executa e [registra](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/adding-self-hosted-runners) um runner dedicado para determinado projeto ou organização dentro de um container Docker.
+O GitHub Actions permite a [configuração de instâncias dedicadas](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/about-self-hosted-runners) para a execução das pipelines. Este projeto consiste numa imagem docker que configura, executa e [registra](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/adding-self-hosted-runners) um runner dedicado para determinado projeto ou organização dentro de um container Docker.
 
 **Vantagens** do uso de runners dedicados:
-1. Os minutos de execução pipeline não são cobrados.
+1. Os minutos de execução da pipeline não são cobrados.
 1. Você pode criar imagens especializadas com requisitos especiais (evitando instalação durante a execução)
 1. Aderência a requisitos especiais de segurança e caching.
-
 
 **Desvantagens** do uso de runners dedicados:
 1. Maior tempo para inicialização (bootstraping)
@@ -22,18 +21,24 @@ O GitHub Actions permite a [configuração de instâncias dedicadas](https://doc
 1. Kubernetes Ready
 
 ## Utilização
-* Copie e configure o arquivo de exemplo de configuração. Você precisará de um [token de acesso](https://github.com/settings/tokens).
+* Copie e configure o arquivo de exemplo de configuração. Você precisará de um [token de acesso](https://github.com/settings/tokens) com scope `admin:org`.
+
 ```sh
 cp .env-exemple .env
 ```
-* Faça o build da imagem
+
+* Faça o build da imagem:
+
 ```sh
 docker build . -t gh-runner
 ```
+
 * Execute o runner:
+
 ```sh
 docker run --name=gh-runner --rm  --privileged --env-file=.env gh-runner
 ```
+
 * Aguarde a criação e o registro do container. Pronto! Você deve ver a seguinte saída no Terminal:
 
 ![](./docs/img/runner.png)
