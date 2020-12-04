@@ -29,5 +29,5 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: python --version
-    - run: 'echo "payload: ${{ toJson(github.event.client_payload).user }}"'
+    - run: 'echo "payload: ${{ github.event.client_payload.user }}"'
         if: github.event.action == 'dag_update'
