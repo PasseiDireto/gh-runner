@@ -1,0 +1,12 @@
+
+name: Test Repo dispatch from another action
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [ dag_update ]
+jobs:
+  runs-dummy-action:
+    runs-on: ubuntu-latest
+    steps:
+    - run: 'echo "payload: ${{ github.event.client_payload }}"'
+      if: github.event.action == 'dag_update'
