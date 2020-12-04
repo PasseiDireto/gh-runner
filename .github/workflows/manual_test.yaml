@@ -4,9 +4,9 @@
 
 name: Check GH Runner
 on:
-  - workflow_dispatch:
-  - repository_dispatch:
-      types: [ dag_update ]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [ dag_update ]
 jobs:
   pre-job-test:
     runs-on: ubuntu-latest
