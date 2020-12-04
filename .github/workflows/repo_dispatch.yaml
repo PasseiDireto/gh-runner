@@ -8,5 +8,5 @@ jobs:
   runs-dummy-action:
     runs-on: ubuntu-latest
     steps:
-    - run: 'echo "payload: ${{ github.event.client_payload }}"'
+    - run: 'echo "payload: ${{ github.event.client_payload.AUTHOR }}"'
       if: github.event.action == 'dag_update'
