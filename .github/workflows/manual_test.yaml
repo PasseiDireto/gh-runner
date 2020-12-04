@@ -9,15 +9,8 @@ jobs:
   pre-job-test:
     runs-on: ubuntu-latest
     steps:
-    - name: Get Action Code
-      uses: actions/checkout@v2
-      with:
-        repository: PasseiDireto/gh-runner-task-action
-        ref: main
-        token: ${{ secrets.PD_BOT_GITHUB_ACCESS_TOKEN }} # stored in GitHub secrets
-        path: .github/actions/pre-job
     - name: Provide a self hosted to execute this job
-      uses: ./.github/actions/pre-job
+      uses: PasseiDireto/gh-runner-task-action@v1
       with:
         github_pat: ${{ secrets.PD_BOT_GITHUB_ACCESS_TOKEN }}
         task_definition: 'gh-runner'
