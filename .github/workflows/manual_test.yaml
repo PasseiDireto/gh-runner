@@ -3,10 +3,7 @@
 # https://github.community/t/github-action-action-in-private-repository/16063/28
 
 name: Check GH Runner
-on:
-  workflow_dispatch:
-  repository_dispatch:
-    types: [ dag_update ]
+on: [workflow_dispatch]
 jobs:
   pre-job-test:
     runs-on: ubuntu-latest
@@ -29,5 +26,3 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: python --version
-    - run: 'echo "payload: ${{ github.event.client_payload.user }}"'
-      if: github.event.action == 'dag_update'
