@@ -8,5 +8,8 @@ jobs:
   runs-dummy-action:
     runs-on: ubuntu-latest
     steps:
-    - run: 'echo "payload: ${{ github.event.client_payload.AUTHOR }}"'
+    - run: |
+        echo "payload: ${{ toJson(github.event.client_payload) }}"
+        echo "event: ${{ toJson(github.event) }}"
+
       if: github.event.action == 'dag_update'
