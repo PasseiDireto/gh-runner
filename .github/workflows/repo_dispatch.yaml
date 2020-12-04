@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: |
-        echo "payload: ${{ toJson(github.event.client_payload) }}"
-        echo "event: ${{ toJson(github.event) }}"
-
+        echo "payload: ${{ github.event.client_payload.AUTHOR }}"
+        echo "payload: ${{ github.event.client_payload.BRANCH }}"
       if: github.event.action == 'dag_update'
