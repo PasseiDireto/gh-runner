@@ -72,9 +72,10 @@ Os seguintes scopes serão necessários para runners de projeto:
 | Variável | Descrição |
 |----------|-----------|
 |RUNNER_NAME|Nome de registro do container. Um ID único será concatenado no final do nome escolhido para garantir unicidade.|
-|GITHUB_PERSONAL_TOKEN|Seu token pessoal (ou do bot)|
-|GITHUB_OWNER|Nome da organização (e.g. PasseiDireto)|
-|GITHUB_REPOSITORY|Repositório de registro (opcional)|
+|GITHUB_PERSONAL_TOKEN|Seu token pessoal (ou do bot).|
+|GITHUB_OWNER|Nome da organização (e.g. PasseiDireto).|
+|GITHUB_REPOSITORY|Repositório de registro (opcional).|
+|RUNNER_LABELS|Permite que labels sejam passadas para o runner em tempo de instanciação.|
 
 ## Arquitetura
 
