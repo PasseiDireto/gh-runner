@@ -12,37 +12,38 @@ else
     registration_url="https://github.com/${GITHUB_OWNER}"
 fi
 
-echo "Requesting registration URL at '${auth_url}'"
+generate_token() {
+  payload=$(curl -sX POST -H "Authorization: token ${GITHUB_PERSONAL_TOKEN}" "${auth_url}")
+  runner_token=$(echo "${payload}" | jq .token --raw-output)
 
-payload=$(curl -sX POST -H "Authorization: token ${GITHUB_PERSONAL_TOKEN}" ${auth_url})
-export RUNNER_TOKEN=$(echo $payload | jq .token --raw-output)
-
-if [ "${RUNNER_TOKEN}" == "null" ]
-then
+  if [ "${runner_token}" == "null" ]
+  then
     echo "${payload}"
     exit 1
-fi
+  fi
+
+  echo "${runner_token}"
+}
+
+remove_runner() {
+  ./config.sh remove --unattended --token "$(generate_token)"
+}
 
 ./config.sh \
     --name ${RUNNER_NAME}_$(openssl rand -hex 6) \
-    --token ${RUNNER_TOKEN} \
+    --token $(generate_token) \
     --url $registration_url \
     --work ${RUNNER_WORKDIR:-"_work"} \
     --unattended \
     --replace
 
-remove() {
-   ./config.sh remove --unattended --token ${RUNNER_TOKEN}
-}
-
-trap 'remove; exit 130' SIGINT
-trap 'remove; exit 143' SIGTERM
+trap 'remove_runner; exit 130' SIGINT
+trap 'remove_runner; exit 143' SIGTERM
 
 for f in runsvc.sh RunnerService.js; do
   mv bin/${f}{,.bak}
   mv {patched,bin}/${f}
 done
 
-unset GITHUB_PERSONAL_TOKEN RUNNER_NAME RUNNER_REPO
 ./bin/runsvc.sh --once "$*"
-remove
+remove_runner
