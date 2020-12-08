@@ -26,15 +26,12 @@ generate_token() {
 }
 
 remove_runner() {
-  runner_token=$(generate_token)
-  ./config.sh remove --unattended --token "${runner_token}"
+  ./config.sh remove --unattended --token "$(generate_token)"
 }
-
-RUNNER_TOKEN=$(generate_token)
 
 ./config.sh \
     --name ${RUNNER_NAME}_$(openssl rand -hex 6) \
-    --token ${RUNNER_TOKEN} \
+    --token $(generate_token) \
     --url $registration_url \
     --work ${RUNNER_WORKDIR:-"_work"} \
     --unattended \
