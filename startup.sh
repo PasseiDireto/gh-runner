@@ -36,7 +36,6 @@ echo "Registering runner ${runner_id}"
     --name ${runner_id} \
     --token $(generate_token) \
     --url $registration_url \
-    --work ${RUNNER_WORKDIR:-"_work"} \
     --unattended \
     --replace
 
