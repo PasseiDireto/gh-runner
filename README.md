@@ -67,8 +67,6 @@ Os seguintes scopes serão necessários para runners de projeto:
 - `notifications`
 - `workflow`
 
-Para runners que irão processar eventos de vários repositórios da organização, o dono do PAT precisa ter acesso de `owner` na organização.
-
 ## Varáveis de Ambiente
 
 | Variável | Descrição |
