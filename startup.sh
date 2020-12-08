@@ -29,8 +29,11 @@ remove_runner() {
   ./config.sh remove --unattended --token "$(generate_token)"
 }
 
+runner_id=${RUNNER_NAME}_$(openssl rand -hex 6)
+echo "Registering runner ${runner_id}"
+
 ./config.sh \
-    --name ${RUNNER_NAME}_$(openssl rand -hex 6) \
+    --name ${runner_id} \
     --token $(generate_token) \
     --url $registration_url \
     --work ${RUNNER_WORKDIR:-"_work"} \
