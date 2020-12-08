@@ -5,11 +5,11 @@ sudo service docker start
 
 if [ -n "${GITHUB_REPOSITORY}" ]
 then
-    auth_url="https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPOSITORY}/actions/runners/registration-token"
-    registration_url="https://github.com/${GITHUB_OWNER}/${GITHUB_REPOSITORY}"
+  auth_url="https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPOSITORY}/actions/runners/registration-token"
+  registration_url="https://github.com/${GITHUB_OWNER}/${GITHUB_REPOSITORY}"
 else
-    auth_url="https://api.github.com/orgs/${GITHUB_OWNER}/actions/runners/registration-token"
-    registration_url="https://github.com/${GITHUB_OWNER}"
+  auth_url="https://api.github.com/orgs/${GITHUB_OWNER}/actions/runners/registration-token"
+  registration_url="https://github.com/${GITHUB_OWNER}"
 fi
 
 generate_token() {
@@ -29,13 +29,15 @@ remove_runner() {
   ./config.sh remove --unattended --token "$(generate_token)"
 }
 
+runner_id=${RUNNER_NAME}_$(openssl rand -hex 6)
+echo "Registering runner ${runner_id}"
+
 ./config.sh \
-    --name ${RUNNER_NAME}_$(openssl rand -hex 6) \
-    --token $(generate_token) \
-    --url $registration_url \
-    --work ${RUNNER_WORKDIR:-"_work"} \
-    --unattended \
-    --replace
+  --name "${runner_id}" \
+  --token "$(generate_token)" \
+  --url "${registration_url}" \
+  --unattended \
+  --replace
 
 trap 'remove_runner; exit 130' SIGINT
 trap 'remove_runner; exit 143' SIGTERM
