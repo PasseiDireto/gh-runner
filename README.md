@@ -75,7 +75,7 @@ Os seguintes scopes serão necessários para runners de projeto:
 |GITHUB_PERSONAL_TOKEN|Seu token pessoal (ou do bot).|
 |GITHUB_OWNER|Nome da organização (e.g. PasseiDireto).|
 |GITHUB_REPOSITORY|Repositório de registro (opcional).|
-|RUNNER_LABELS|Permite que labels sejam passadas para o runner em tempo de instanciação.|
+|RUNNER_LABELS| Lista (separada por vírgulas) [de labels](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/using-labels-with-self-hosted-runners). São passadas durante a configuração do runner.|
 
 ## Arquitetura
 
