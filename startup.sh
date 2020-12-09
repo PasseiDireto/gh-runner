@@ -34,6 +34,7 @@ echo "Registering runner ${runner_id}"
 
 ./config.sh \
   --name "${runner_id}" \
+  --labels "${RUNNER_LABELS}" \
   --token "$(generate_token)" \
   --url "${registration_url}" \
   --unattended \
