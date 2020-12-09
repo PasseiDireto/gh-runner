@@ -22,8 +22,8 @@ jobs:
         with:
           push: true
           tags: |
-            gh-runner:latest
-            gh-runner:${{ env.TAG }}
+            ${{secrets.AWS_PROD_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_DEFAULT_REGION}}.amazonaws.com/gh-runner:latest
+            ${{secrets.AWS_PROD_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_DEFAULT_REGION}}.amazonaws.com/gh-runner:${{ env.TAG }}
   build_push_docker_hub:
     name: Push image Docker Hub
     runs-on: ubuntu-latest
