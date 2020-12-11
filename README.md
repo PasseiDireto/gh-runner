@@ -21,6 +21,7 @@ You can also see the runner registered at the repository on `repo > settings > a
 ![](./docs/img/registered-runners.png)
 
 After you kill the container (with ctrl+C or `docker stop gh-runner`) you will see as it deregisters itself and stops:
+
 ![](./docs/img/removal.png)
 
 Note that it won't be able to unregisters nicely if you `docker kill` it or somehow send a `SIGKILL`.
