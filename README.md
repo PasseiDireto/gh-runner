@@ -2,109 +2,98 @@
 
 Self hosted GitHub Actions Runner.
 
-O GitHub Actions permite a [configuração de instâncias dedicadas](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/about-self-hosted-runners) para a execução das pipelines. Este projeto consiste numa imagem docker que configura, executa e [registra](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/adding-self-hosted-runners) um runner dedicado para determinado projeto ou organização dentro de um container Docker.
+GitHub Actions allows you to [host your own runners for actions](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/about-self-hosted-runners). This project presents a docker container capable of setup, run and [register](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/adding-self-hosted-runners) itself on a Organization or Repository, being available to execute workflows.
 
-**Vantagens** do uso de runners dedicados:
-1. Os minutos de execução da pipeline não são cobrados.
-1. Você pode criar imagens especializadas com requisitos especiais (evitando instalação durante a execução)
-1. Aderência a requisitos especiais de segurança e caching.
+This image is available public at [Docker Hub](https://hub.docker.com/r/passeidireto/gh-runner). To run it, you just need to:
 
-**Desvantagens** do uso de runners dedicados:
-1. Maior tempo para inicialização (bootstraping)
-1. Não é possível [desligar todos os runners quando estão ociosos](https://sanderknape.com/2020/03/self-hosted-github-actions-runner-kubernetes/)
+```
+cp .env-exemple .env # modify with your custom configuration, such as the PAT, Repostitory and Organization.
 
-## Funcionalidades
-1. Personalização de hostname e registro em repositórios ou organizações
-1. Remoção do runner quando o container é parado
-1. Execução de vários runners no mesmo host (com ou sem autoscaling)
-1. Docker in a Docker (Dind)
-1. Kubernetes Ready
-
-## Utilização
-* Copie e configure o arquivo de exemplo de configuração. Você precisará de um [token de acesso](https://github.com/settings/tokens), veja na seção seguinte os scopes necessários.
-
-```sh
-cp .env-exemple .env
+docker run --name=gh-runner --rm  --privileged --env-file=.envpasseidireto/gh-runner
 ```
 
-* Faça o build da imagem:
-
-```sh
-docker build . -t gh-runner
-```
-
-* Execute o runner:
-
-```sh
-docker run --name=gh-runner --rm  --privileged --env-file=.env gh-runner
-```
-
-* Aguarde a criação e o registro do container. Pronto! Você deve ver a seguinte saída no terminal:
+Just wait while it registers itself. You will see this output shortly:
 
 ![](./docs/img/runner.png)
 
-Para ver o(s) runner(s) registrado(s) no repositório, é só acessar `projeto > configurações > actions`:
+You can also see the runner registered at the repository on `repo > settings > actions`:
 
 ![](./docs/img/registered-runners.png)
 
-Ao parar/matar o container, o runners será removido antes de terminar o processo:
+After you kill the container (with ctrl+C or `docker stop gh-runner`) you will see as it deregisters itself and stops:
 ![](./docs/img/removal.png)
 
-**Importante!** Para configurar o runner na organização, basta deixar a variável `GITHUB_OWNER` vazia. Mas para isso você precisa de privilégios de administrador na organização alvo.
+Note that it won't be able to unregisters nicely if you `docker kill` it or somehow send a `SIGKILL`.
+
+If you want it registered at organization level, just let the `GITHUB_REPOSITORY` variable empty. See more about configuration variables at [Environment Variables](#environment-variables) section.  Also, keep in mind that you will need organization privilege levels to perform this action. More details are provided at [Personal Access Token (PAT)](#personal-access-token-pat).
+
+
+
+## Features
+1. You can set arbitrary names and register at organization or repository level
+1. The runner executes just one workflow and then it stops and unregisters itself
+1. You can have multiple runners in the same host
+1. Docker in a Docker (Dind)
+1. ECS and Kubernetes Ready
+1. [Label](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/using-labels-with-self-hosted-runners) customization
+
 
 ## Personal Access Token (PAT)
 
-Os seguintes scopes serão necessários para runners de organização:
+The following scopes are necessary in order to register a runner at organization level:
 
 - `admin:org`
 
-Os seguintes scopes serão necessários para runners de projeto:
+The following scopes are necessary in order to register at repository level:
 
-- `repo` (todos)
-- `read:public_key` (dentro de `admin:public_key`)
-- `read:repo_hook` (dentro de `admin:repo_hook`)
+- `repo` (all)
+- `read:public_key` (on `admin:public_key`)
+- `read:repo_hook` (on `admin:repo_hook`)
 - `admin:org_hook`
 - `notifications`
 - `workflow`
 
-## Varáveis de Ambiente
+## Environment Variables
 
-| Variável | Descrição |
+| Name | Description |
 |----------|-----------|
-|RUNNER_NAME|Nome de registro do container. Um ID único será concatenado no final do nome escolhido para garantir unicidade.|
-|GITHUB_PERSONAL_TOKEN|Seu token pessoal (ou do bot).|
-|GITHUB_OWNER|Nome da organização (e.g. PasseiDireto).|
-|GITHUB_REPOSITORY|Repositório de registro (opcional).|
-|RUNNER_LABELS| Lista (separada por vírgulas) [de labels](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/using-labels-with-self-hosted-runners). São passadas durante a configuração do runner.|
+|RUNNER_NAME| Runner name. A random suffix will be generated to assert the uniqueness |
+|GITHUB_PERSONAL_TOKEN| yours (or bot's) [PAT](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token)|
+|GITHUB_OWNER|Organization's name (e.g. PasseiDireto).|
+|GITHUB_REPOSITORY| Repository's name (optional).|
+|RUNNER_LABELS| Comma separated list of [labels](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/using-labels-with-self-hosted-runners). They will be passed to runner on setup time.|
 
-## Arquitetura
+## Implementation details
 
-A imagem padrão contém três componentes básicos: a engine docker, as dependências de runtime do runner e o listener do runner:
+The image has three basic components: the docker engine, runner dependencies and the runner listener:
 
 ![](./docs/img/runner-model.png)
 
-A engine Docker roda dentro do container, padrão conhecido como Docker in Docker ou Dind. Existe a [imagem oficial Docker](https://hub.docker.com/_/docker/) para essa finalidade, mas ela só tem suporte para o [linux Alpine](https://github.com/docker-library/docker/issues/127), enquanto o [GHA Runner](https://github.com/actions/runner/) só tem suporte para [outras distribuições](https://github.com/actions/runner/blob/main/docs/start/envlinux.md#supported-distributions-and-versions). Por isso fizemos uma imagem inspirada na oficial, mas utilizando esta [outra iniciativa](https://hub.docker.com/r/teracy/ubuntu) que nasceu de [necessidades próximas às nossas](http://blog.teracy.com/2017/09/11/how-to-use-docker-in-docker-dind-and-docker-outside-of-docker-dood-for-local-ci-testing/). Na prática o GHA Runner nem suporta execução em containers, apesar de ser um [desejo antigo](https://github.com/actions/runner/labels/Runner%20%3Aheart%3A%20Container) da comunidade e dos mantenedores do projeto.
+This image runs a pattern known as Docker in Docker or Dind for short. There's a [official Dind Image](https://hub.docker.com/_/docker/), but it is only [Alpine compatible](https://github.com/docker-library/docker/issues/127). In the meanwhile, [GHA Runner](https://github.com/actions/runner/) only supports [other distributions](https://github.com/actions/runner/blob/main/docs/start/envlinux.md#supported-distributions-and-versions). That's why we have this image inspired on the official Dind, but based on [another initiative ](https://hub.docker.com/r/teracy/ubuntu) with [similar needs](http://blog.teracy.com/2017/09/11/how-to-use-docker-in-docker-dind-and-docker-outside-of-docker-dood-for-local-ci-testing/).
 
-Outra modificação no funcionamento padrão da imagem foi realizada para sanar outro problema da execução em containers. O update automático padrão do GHA faz com que o runner reinicie após o update, matando o container. Seguindo sugestões dos [mantenedores do projeto](https://github.com/actions/runner/issues/246#issuecomment-568638572) nós utilizamos o `runsvc.sh` para incializar o listener. Essa substituição é feita com os arquivos da pasta `/patched`.
+Users of this approach should bear in mind that technically the GHA Runner does not even support container execution, although that's something they (and the community) want and are [working into](https://github.com/actions/runner/labels/Runner%20%3Aheart%3A%20Container).
 
-Utilização do [dumb-init](https://engineeringblog.yelp.com/2016/01/dumb-init-an-init-for-docker.html) para gerenciar a execução do script. A funcionalidade desejada é que os [sinais de finalização do `docker stop`](https://www.ctl.io/developers/blog/post/gracefully-stopping-docker-containers/) (`SIGINT/SIGKILL`) sejam corretamente tratados, possibilitando o desregistro do runner seja realizado. Isso possibilita o funcionamento autonomo em plataformas como o ECS (Fargate/EC2) ou Kubernetes.
+Another quirk of this approach is that we patched a small portion of the runner using some of the [maintainers tips](https://github.com/actions/runner/issues/246#issuecomment-568638572) to refrain the runner of trying to self update. Since the original update behavior is slow and restarts the listener, our container would be in a endless loop of starting and killing itself. That's why we use a custom `runsvc.sh` to run the listener. You can see the altered files the `/patched` repository.
 
-### Ciclo de vida
+Finally, we use [dumb-init](https://engineeringblog.yelp.com/2016/01/dumb-init-an-init-for-docker.html) to manage the service execution. The most important feature is to deal with the `SIGINT/SIGKILL` signals and [how docker reacts to them](https://www.ctl.io/developers/blog/post/gracefully-stopping-docker-containers/). With this approach we properly stop and unregister the listener in most of the scenarios, such as scale in and out, to work with platforms like (ECS/Fargate/EC2) and Kubernetes. Otherwise, the runner would hang forever as Offline on the repository/organization.
 
-O ciclo de vida do container pode ser resumido como:
+### Container's Lifecycle
 
-- Inicialização (`docker run`)
-- Autenticação (passando o token PAT e recebendo o runner token)
-- Registro do runner na organização/repositórios
-- Aguardando por tarefas [indefinidamente]
-- Interrupção (`docker stop`)
-    - Stop do listener
-    - Desregistro do runner no GHA
-- Finalização do container
+We can resume the container's lifecycle as:
 
-## Inspirações
+- Init (`docker run`)
+- Authentication ( With the PAT and receiving a runner token)
+- Runner repo/organization registration
+- Waiting for taks (as long as needed)
+- Workflow execution
+- Interruption (`docker stop` or workflow conclusion )
+    - Listener stop
+    - Unsregisters the container (using a new runner token, as the old one [might be expired for long running tasks](https://github.com/actions/runner/issues/845))
+- Container removal
 
-Alguns projetos estão tentando suprir a falta de suporte dos GHA Self Hosted Runners para containers, abordagens efêmeras, ECS e Kubernetes. Entre eles podemos destacar:
+## Inspirations
+
+Some projects are trying to fill the lack of a official GHA Self Hosted Runners for containers and ephemeral approaches, such as ECS and Kubernetes. We can list some of them:
 
 - https://github.com/myoung34/docker-github-actions-runner
 - https://github.com/summerwind/actions-runner-controller
