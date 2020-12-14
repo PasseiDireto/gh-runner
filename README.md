@@ -9,7 +9,7 @@ This image is available public at [Docker Hub](https://hub.docker.com/r/passeidi
 ```
 cp .env-exemple .env # modify with your custom configuration, such as the PAT, Repostitory and Organization.
 
-docker run --name=gh-runner --rm  --privileged --env-file=.envpasseidireto/gh-runner
+docker run --name=gh-runner --rm  --privileged --env-file=.env passeidireto/gh-runner
 ```
 
 Just wait while it registers itself. You will see this output shortly:
@@ -59,7 +59,7 @@ The following scopes are necessary in order to register at repository level:
 | Name | Description |
 |----------|-----------|
 |RUNNER_NAME| Runner name. A random suffix will be generated to assert the uniqueness |
-|GITHUB_PERSONAL_TOKEN| yours (or bot's) [PAT](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token)|
+|GITHUB_PERSONAL_TOKEN| Yours (or bot's) [PAT](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token)|
 |GITHUB_OWNER|Organization's name (e.g. PasseiDireto).|
 |GITHUB_REPOSITORY| Repository's name (optional).|
 |RUNNER_LABELS| Comma separated list of [labels](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/using-labels-with-self-hosted-runners). They will be passed to runner on setup time.|
@@ -83,7 +83,7 @@ Finally, we use [dumb-init](https://engineeringblog.yelp.com/2016/01/dumb-init-a
 We can resume the container's lifecycle as:
 
 - Init (`docker run`)
-- Authentication ( With the PAT and receiving a runner token)
+- Authentication (with the PAT and receiving a runner token)
 - Runner repo/organization registration
 - Waiting for taks (as long as needed)
 - Workflow execution
