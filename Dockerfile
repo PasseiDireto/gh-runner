@@ -3,7 +3,7 @@ FROM teracy/ubuntu:18.04-dind-latest
 
 # Extra deps for GHA Runner
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update \
+RUN add-apt-repository ppa:git-core/ppa && apt-get update \
     && apt-get install -y \
     curl \
     dnsutils \
