@@ -3,27 +3,27 @@ on:
     - cron:  '0 1 * * *'
   workflow_dispatch:
 jobs:
-    check-new-version:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - name: 'Get CURRENT (from file) and NEW (pro GH's API) versions of the runner'
-          run: |
-            echo "NEW_VERSION=$(curl -s "https://api.github.com/repos/actions/runner/releases" | jq --raw-output '.[0].tag_name' | sed -e 's/^v//')" >> $GITHUB_ENV
-            echo "CURRENT_VERSION=$(sed -n '/^ARG RUNNER_VERSION=/s///p' Dockerfile)"
-        - name: 'Update runner version on Dockerfile'
-          if: ${{ github.env.NEW_VERSION }} != ${{ github.env.CURRENT_VERSION }}
-          run: |
-            sed "s|${CURRENT_VERSION}|${NEW_VERSION}|g" -i Dockerfile
-            echo "PR_BODY=$(curl -s "https://raw.githubusercontent.com/actions/runner/main/releaseNote.md")"
-        - name: 'Open a new PR'
-          if: ${{ github.env.NEW_VERSION }} != ${{ github.env.CURRENT_VERSION }}
-          uses: peter-evans/create-pull-request@v3
-            with:
-              commit-message: "Update GH Runner from ${{ github.env.CURRENT_VERSION }} to  ${{ github.env.NEW_VERSION }}"
-              title:  "Update GH Runner from ${{ github.env.CURRENT_VERSION }} to  ${{ github.env.NEW_VERSION }}"
-              branch: "update-runner-${{ github.env.NEW_VERSION }}"
-              body: ${{ github.env.PR_BODY }}
-              delete-branch: true
-              reviewers: "drigos,vschettino"
-              assignees: "drigos,vschettino"
+  check-new-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: 'Get CURRENT (from file) and NEW (pro GH's API) versions of the runner'
+        run: |
+          echo "NEW_VERSION=$(curl -s "https://api.github.com/repos/actions/runner/releases" | jq --raw-output '.[0].tag_name' | sed -e 's/^v//')" >> $GITHUB_ENV
+          echo "CURRENT_VERSION=$(sed -n '/^ARG RUNNER_VERSION=/s///p' Dockerfile)"
+      - name: 'Update runner version on Dockerfile'
+        if: ${{ github.env.NEW_VERSION }} != ${{ github.env.CURRENT_VERSION }}
+        run: |
+          sed "s|${CURRENT_VERSION}|${NEW_VERSION}|g" -i Dockerfile
+          echo "PR_BODY=$(curl -s "https://raw.githubusercontent.com/actions/runner/main/releaseNote.md")"
+      - name: 'Open a new PR'
+        if: ${{ github.env.NEW_VERSION }} != ${{ github.env.CURRENT_VERSION }}
+        uses: peter-evans/create-pull-request@v3
+          with:
+            commit-message: "Update GH Runner from ${{ github.env.CURRENT_VERSION }} to  ${{ github.env.NEW_VERSION }}"
+            title:  "Update GH Runner from ${{ github.env.CURRENT_VERSION }} to  ${{ github.env.NEW_VERSION }}"
+            branch: "update-runner-${{ github.env.NEW_VERSION }}"
+            body: ${{ github.env.PR_BODY }}
+            delete-branch: true
+            reviewers: "drigos,vschettino"
+            assignees: "drigos,vschettino"
