@@ -47,7 +47,7 @@ jobs:
     name: Triggers simple test workflow to ensure everything still working as expected
     runs-on: ubuntu-latest
     steps:
-        uses: passeidireto/trigger-external-workflow-action@main
+      - uses: passeidireto/trigger-external-workflow-action@main
         if: success()
         with:
           repository: PasseiDireto/gh-runner
