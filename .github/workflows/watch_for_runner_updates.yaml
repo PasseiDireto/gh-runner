@@ -20,7 +20,7 @@ jobs:
         if: ${{ github.env.NEW_VERSION }} != ${{ github.env.CURRENT_VERSION }}
         uses: peter-evans/create-pull-request@v3
         with:
-          commit-message: "Update GH Runner from ${{ github.env.CURRENT_VERSION }} to ${{ github.env.NEW_VERSION }}"
+          commit-message: Update GH Runner from ${{ github.env.CURRENT_VERSION }} to ${{ github.env.NEW_VERSION }}
           title:  "Update GH Runner from ${{ github.env.CURRENT_VERSION }} to  ${{ github.env.NEW_VERSION }}"
           branch: "update-runner-${{ github.env.NEW_VERSION }}"
           body: ${{ github.env.PR_BODY }}
