@@ -19,11 +19,11 @@ jobs:
       - name: Open a new PR
         if: ${{ github.env.NEW_VERSION }} != ${{ github.env.CURRENT_VERSION }}
         uses: peter-evans/create-pull-request@v3
-          with:
-            commit-message: "Update GH Runner from ${{ github.env.CURRENT_VERSION }} to  ${{ github.env.NEW_VERSION }}"
-            title:  "Update GH Runner from ${{ github.env.CURRENT_VERSION }} to  ${{ github.env.NEW_VERSION }}"
-            branch: "update-runner-${{ github.env.NEW_VERSION }}"
-            body: ${{ github.env.PR_BODY }}
-            delete-branch: true
-            reviewers: "drigos,vschettino"
-            assignees: "drigos,vschettino"
+        with:
+          commit-message: "Update GH Runner from ${{ github.env.CURRENT_VERSION }} to ${{ github.env.NEW_VERSION }}"
+          title:  "Update GH Runner from ${{ github.env.CURRENT_VERSION }} to  ${{ github.env.NEW_VERSION }}"
+          branch: "update-runner-${{ github.env.NEW_VERSION }}"
+          body: ${{ github.env.PR_BODY }}
+          delete-branch: true
+          reviewers: "drigos,vschettino"
+          assignees: "drigos,vschettino"
