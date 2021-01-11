@@ -46,6 +46,7 @@ jobs:
   trigger-test-workflow:
     name: Triggers simple test workflow to ensure everything still working as expected
     runs-on: ubuntu-latest
+    needs: build_push_ecr
     steps:
       - uses: passeidireto/trigger-external-workflow-action@main
         if: success()
