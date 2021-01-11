@@ -1,9 +1,8 @@
-
-# https://github.com/actions/checkout/issues/95
-# https://github.community/t/github-action-action-in-private-repository/16063/28
-
 name: Check GH Runner
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [ successful_release ]
 jobs:
   pre-job-test:
     runs-on: ubuntu-latest
