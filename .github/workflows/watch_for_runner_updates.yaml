@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Get CURRENT (from file) and NEW (pro GH's API) versions of the runner
         run: |
-          echo "NEW_VERSION=$(curl -s "https://api.github.com/repos/actions/runner/releases" | jq --raw-output '.[0].tag_name' | sed -e 's/^v//')" >> $GITHUB_ENV
+          echo "NEW_VERSION=$(curl -s "https://api.github.com/repos/actions/runner/releases/latest" | jq --raw-output '.tag_name' | tr -d v)" >> $GITHUB_ENV
           echo "CURRENT_VERSION=$(sed -n '/^ARG RUNNER_VERSION=/s///p' Dockerfile)" >> $GITHUB_ENV
       - name: Update runner version on Dockerfile
         if: ${{ env.NEW_VERSION != env.CURRENT_VERSION }}
