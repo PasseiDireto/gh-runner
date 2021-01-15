@@ -24,7 +24,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: |
-        time sleep 10
+        sleep 60
         docker run hello-world
   job2:
     runs-on: self-hosted
@@ -32,7 +32,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: |
-        time sleep 25
+        sleep 120
         docker run hello-world
   job3:
     runs-on: self-hosted
@@ -40,7 +40,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: |
-        time sleep 35
+        sleep 180
         docker run hello-world
   job4:
     runs-on: self-hosted
@@ -48,7 +48,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: |
-        time sleep 45
+        sleep 240
         docker run hello-world
   job5:
     runs-on: self-hosted
@@ -56,5 +56,5 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: |
-        time sleep 55
+        sleep 300
         docker run hello-world
