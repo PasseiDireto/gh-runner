@@ -20,8 +20,6 @@ jobs:
   #       AWS_DEFAULT_REGION:  ${{secrets.AWS_DEFAULT_REGION}}
   runs-dummy-action:
     runs-on: self-hosted
-    container:
-      image: python:3.9-slim
     steps:
     - uses: actions/checkout@v2
-    - run: python --version
+    - run: docker run hello-world
