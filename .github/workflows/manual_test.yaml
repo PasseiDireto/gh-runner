@@ -18,15 +18,43 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.CDK_ACCESS_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.CDK_SECRET_KEY }}
         AWS_DEFAULT_REGION:  ${{secrets.AWS_DEFAULT_REGION}}
-  runs-dummy-action:
+  job1:
     runs-on: self-hosted
-    strategy:
-      fail-fast: false
-      matrix:
-          instances: [1, 2, 3, 4, 5]
     needs: pre-job-test
     steps:
     - uses: actions/checkout@v2
     - run: |
-        time sleep $[ ( $RANDOM % 60 )  + 10 ]s
+        time sleep 10
+        docker run hello-world
+  job2:
+    runs-on: self-hosted
+    needs: pre-job-test
+    steps:
+    - uses: actions/checkout@v2
+    - run: |
+        time sleep 25
+        docker run hello-world
+  job3:
+    runs-on: self-hosted
+    needs: pre-job-test
+    steps:
+    - uses: actions/checkout@v2
+    - run: |
+        time sleep 35
+        docker run hello-world
+  job4:
+    runs-on: self-hosted
+    needs: pre-job-test
+    steps:
+    - uses: actions/checkout@v2
+    - run: |
+        time sleep 45
+        docker run hello-world
+  job5:
+    runs-on: self-hosted
+    needs: pre-job-test
+    steps:
+    - uses: actions/checkout@v2
+    - run: |
+        time sleep 55
         docker run hello-world
