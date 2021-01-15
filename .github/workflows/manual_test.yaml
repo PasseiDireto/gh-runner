@@ -13,16 +13,16 @@ jobs:
         github_pat: ${{ secrets.PD_BOT_GITHUB_ACCESS_TOKEN }}
         task_definition: 'gh-runner'
         cluster: 'gh-runner'
-        # count: 3
+        count: 5
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.CDK_ACCESS_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.CDK_SECRET_KEY }}
         AWS_DEFAULT_REGION:  ${{secrets.AWS_DEFAULT_REGION}}
   runs-dummy-action:
     runs-on: self-hosted
-    # strategy:
-    #   matrix:
-    #       instances: [1,2,3] # three tasks will be launched
+    strategy:
+      matrix:
+          instances: [1, 2, 3, 4, 5]
     needs: pre-job-test
     steps:
     - uses: actions/checkout@v2
