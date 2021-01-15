@@ -26,4 +26,6 @@ jobs:
     needs: pre-job-test
     steps:
     - uses: actions/checkout@v2
-    - run: python --version
+    - run: |
+      sleep 30
+      python --version
