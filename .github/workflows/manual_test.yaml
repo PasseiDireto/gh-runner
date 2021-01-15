@@ -27,5 +27,5 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: |
-      sleep 30
-      python --version
+        sleep 30
+        python --version
