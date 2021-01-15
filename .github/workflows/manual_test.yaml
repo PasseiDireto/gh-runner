@@ -4,20 +4,20 @@ on:
   repository_dispatch:
     types: [ successful_release ]
 jobs:
-  pre-job-test:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Provide a self hosted to execute this job
-      uses: PasseiDireto/gh-runner-task-action@main
-      with:
-        github_pat: ${{ secrets.PD_BOT_GITHUB_ACCESS_TOKEN }}
-        task_definition: 'gh-runner'
-        cluster: 'gh-runner'
-        count: 10
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.CDK_ACCESS_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.CDK_SECRET_KEY }}
-        AWS_DEFAULT_REGION:  ${{secrets.AWS_DEFAULT_REGION}}
+  # pre-job-test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Provide a self hosted to execute this job
+  #     uses: PasseiDireto/gh-runner-task-action@main
+  #     with:
+  #       github_pat: ${{ secrets.PD_BOT_GITHUB_ACCESS_TOKEN }}
+  #       task_definition: 'gh-runner'
+  #       cluster: 'gh-runner'
+  #       count: 10
+  #     env:
+  #       AWS_ACCESS_KEY_ID: ${{ secrets.CDK_ACCESS_ID }}
+  #       AWS_SECRET_ACCESS_KEY: ${{ secrets.CDK_SECRET_KEY }}
+  #       AWS_DEFAULT_REGION:  ${{secrets.AWS_DEFAULT_REGION}}
   runs-dummy-action:
     runs-on: self-hosted
     strategy:
