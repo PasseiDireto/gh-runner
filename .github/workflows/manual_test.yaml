@@ -20,11 +20,9 @@ jobs:
   #       AWS_DEFAULT_REGION:  ${{secrets.AWS_DEFAULT_REGION}}
   runs-dummy-action:
     runs-on: self-hosted
-    strategy:
-      matrix:
-        dummy: [1, 2, 3]
     container:
       image: python:3.9-slim
+    needs: pre-job-test
     steps:
     - uses: actions/checkout@v2
     - run: python --version
