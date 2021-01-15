@@ -23,9 +23,11 @@ jobs:
     strategy:
       matrix:
           instances: [1, 2, 3, 4, 5]
+          fail-fast: false
+
     needs: pre-job-test
     steps:
     - uses: actions/checkout@v2
     - run: |
-        sleep $[ ( $RANDOM % 15 )  + 1 ]s
+        sleep $[ ( $RANDOM % 15 )  + 5 ]s
         docker run hello-world
