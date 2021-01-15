@@ -21,10 +21,9 @@ jobs:
   runs-dummy-action:
     runs-on: self-hosted
     strategy:
+      fail-fast: false
       matrix:
           instances: [1, 2, 3, 4, 5]
-          fail-fast: false
-
     needs: pre-job-test
     steps:
     - uses: actions/checkout@v2
