@@ -22,10 +22,10 @@ jobs:
     runs-on: self-hosted
     strategy:
       matrix:
-        dummy: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        dummy: [1, 2, 3]
     needs: pre-job-test
+    container:
+      image: python:3.9-slim
     steps:
     - uses: actions/checkout@v2
-    - run: |
-        sleep 30
-        python --version
+    - run: python --version
