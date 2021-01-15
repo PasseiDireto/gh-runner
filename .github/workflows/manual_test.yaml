@@ -23,7 +23,6 @@ jobs:
     strategy:
       matrix:
         dummy: [1, 2, 3]
-    needs: pre-job-test
     container:
       image: python:3.9-slim
     steps:
