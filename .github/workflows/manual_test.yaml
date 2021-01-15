@@ -20,41 +20,12 @@ jobs:
         AWS_DEFAULT_REGION:  ${{secrets.AWS_DEFAULT_REGION}}
   job1:
     runs-on: self-hosted
+    strategy:
+      fail-fast: false
+      matrix:
+          instances: [1, 2, 3, 4, 5]
     needs: pre-job-test
     steps:
     - uses: actions/checkout@v2
     - run: |
-        sleep 60
-        docker run hello-world
-  job2:
-    runs-on: self-hosted
-    needs: pre-job-test
-    steps:
-    - uses: actions/checkout@v2
-    - run: |
-        sleep 120
-        docker run hello-world
-  job3:
-    runs-on: self-hosted
-    needs: pre-job-test
-    steps:
-    - uses: actions/checkout@v2
-    - run: |
-        sleep 180
-        docker run hello-world
-  job4:
-    runs-on: self-hosted
-    needs: pre-job-test
-    steps:
-    - uses: actions/checkout@v2
-    - run: |
-        sleep 240
-        docker run hello-world
-  job5:
-    runs-on: self-hosted
-    needs: pre-job-test
-    steps:
-    - uses: actions/checkout@v2
-    - run: |
-        sleep 300
-        docker run hello-world
+        while [ ! -f /var/run/docker.sock ]; do sleep 0.5; done; docker run hello-world
