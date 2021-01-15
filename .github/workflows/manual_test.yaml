@@ -27,5 +27,5 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: |
-      sleep $[ ( $RANDOM % 15 )  + 1 ]s
-      docker run hello-world
+        sleep $[ ( $RANDOM % 15 )  + 1 ]s
+        docker run hello-world
