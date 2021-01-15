@@ -18,7 +18,6 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.CDK_ACCESS_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.CDK_SECRET_KEY }}
         AWS_DEFAULT_REGION:  ${{secrets.AWS_DEFAULT_REGION}}
-    - run: sleep 15
   runs-dummy-action:
     runs-on: self-hosted
     strategy:
@@ -27,4 +26,6 @@ jobs:
     needs: pre-job-test
     steps:
     - uses: actions/checkout@v2
-    - run: docker run hello-world
+    - run: |
+      sleep $[ ( $RANDOM % 15 )  + 1 ]s
+      docker run hello-world
