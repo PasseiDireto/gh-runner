@@ -26,7 +26,7 @@ RUN adduser --disabled-password --gecos "" --uid 1000 runner \
 
 # Build args
 ARG TARGETPLATFORM=amd64
-ARG RUNNER_VERSION=2.276.0
+ARG RUNNER_VERSION=2.275.1
 ARG DOCKER_CHANNEL=stable
 ARG DOCKER_VERSION=19.03.13
 ARG DEBUG=false
