@@ -29,6 +29,7 @@ remove_runner() {
   ./config.sh remove --unattended --token "$(generate_token)"
 }
 
+service docker status
 runner_id=${RUNNER_NAME}_$(openssl rand -hex 6)
 echo "Registering runner ${runner_id}"
 
