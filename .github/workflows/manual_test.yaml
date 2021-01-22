@@ -19,7 +19,7 @@ jobs:
   #       AWS_SECRET_ACCESS_KEY: ${{ secrets.CDK_SECRET_KEY }}
   #       AWS_DEFAULT_REGION:  ${{secrets.AWS_DEFAULT_REGION}}
   job:
-    # runs-on: self-hosted
+    runs-on: self-hosted
     strategy:
       fail-fast: false
       matrix:
