@@ -28,4 +28,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: |
+        sudo service docker start
+        sleep 3
         docker run python:${{ matrix.version }}-slim
