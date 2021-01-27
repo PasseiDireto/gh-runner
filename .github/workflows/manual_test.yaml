@@ -14,7 +14,7 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
         role-to-assume: ${{ secrets.AWS_ECS_RUN_TASK_ROLE }}
-        role-duration-seconds: 600
+        role-duration-seconds: 900
     - name: Provide a self hosted to execute this job
       uses: PasseiDireto/gh-runner-task-action@main
       with:
