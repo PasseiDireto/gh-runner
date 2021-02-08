@@ -7,6 +7,14 @@ jobs:
   pre-job-test:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+        role-to-assume: ${{ secrets.AWS_ECS_RUN_TASK_ROLE }}
+        role-duration-seconds: 900
     - name: Provide a self hosted to execute this job
       uses: PasseiDireto/gh-runner-task-action@main
       with:
@@ -14,11 +22,7 @@ jobs:
         task_definition: 'gh-runner'
         cluster: 'gh-runner'
         task_count: 4
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.CDK_ACCESS_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.CDK_SECRET_KEY }}
-        AWS_DEFAULT_REGION:  ${{secrets.AWS_DEFAULT_REGION}}
-  job:
+  runs-dummy-action:
     runs-on: self-hosted
     strategy:
       fail-fast: false
