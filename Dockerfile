@@ -13,22 +13,19 @@ RUN apt-get update \
     git \
     && rm -rf /var/lib/apt/list/*
 
-
 # Add and config runner user as sudo
 # Remove default admin user
 # https://github.com/nestybox/dockerfiles/blob/master/ubuntu-focal-systemd/Dockerfile
-RUN useradd runner \
+RUN useradd -m runner \
     && usermod -aG sudo runner \
     && usermod -aG docker runner \
     && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
     && userdel -r admin
 
-
 # Build args
 ARG TARGETPLATFORM=amd64
 ARG RUNNER_VERSION=2.276.1
 WORKDIR /runner
-
 
 # Runner download supports amd64 as x64
 RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \

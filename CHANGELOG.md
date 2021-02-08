@@ -6,3 +6,7 @@
 - Remove now unnecessary dependencies from apt-get.
 - Remove unused build args
 - Update docs to explain sysbox dependency
+
+## v3.0.1 (2020-02-08)
+
+- Fix runner user creation to have the habitual home folder path
