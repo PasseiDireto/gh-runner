@@ -26,7 +26,7 @@ RUN useradd runner \
 
 # Build args
 ARG TARGETPLATFORM=amd64
-ARG RUNNER_VERSION=2.276.0
+ARG RUNNER_VERSION=2.276.1
 WORKDIR /runner
 
 
