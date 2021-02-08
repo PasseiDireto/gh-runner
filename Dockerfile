@@ -1,15 +1,12 @@
-
-FROM teracy/ubuntu:18.04-dind-latest
+FROM nestybox/ubuntu-focal-systemd-docker
 
 # Extra deps for GHA Runner
 ENV DEBIAN_FRONTEND=noninteractive
-RUN add-apt-repository ppa:git-core/ppa && apt-get update \
+RUN apt-get update \
     && apt-get install -y \
     curl \
-    dnsutils \
     jq \
     sudo \
-    openssh-client \
     unzip \
     wget \
     zip \
@@ -18,18 +15,18 @@ RUN add-apt-repository ppa:git-core/ppa && apt-get update \
 
 
 # Add and config runner user as sudo
-RUN adduser --disabled-password --gecos "" --uid 1000 runner \
+# Remove default admin user
+# https://github.com/nestybox/dockerfiles/blob/master/ubuntu-focal-systemd/Dockerfile
+RUN useradd runner \
     && usermod -aG sudo runner \
     && usermod -aG docker runner \
-    && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers
+    && echo "%sudo   ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers \
+    && userdel -r admin
 
 
 # Build args
 ARG TARGETPLATFORM=amd64
 ARG RUNNER_VERSION=2.276.1
-ARG DOCKER_CHANNEL=stable
-ARG DOCKER_VERSION=19.03.13
-ARG DEBUG=false
 WORKDIR /runner
 
 
@@ -61,8 +58,6 @@ COPY --chown=runner:runner patched/ ./patched/
 RUN chmod +x ./patched/runsvc.sh /usr/local/bin/startup.sh
 
 USER runner
-# Volume to let docker pull all images (with aufs)
-# https://github.com/moby/moby/issues/13742
-VOLUME /var/lib/docker
+
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--"]
 CMD ["startup.sh"]
