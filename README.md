@@ -43,7 +43,7 @@ For a detailed example of how to use this image, you can check our [CDK stack re
 1. You can set arbitrary names and register at organization or repository level
 1. The runner executes just one workflow and then it stops and unregisters itself
 1. You can have multiple runners in the same host
-1. Docker in a Docker (Dind) with sysbox.
+1. Docker in a Docker (Dind) with sysbox
 1. ECS and Kubernetes Ready
 1. [Label](https://docs.github.com/en/free-pro-team@latest/actions/hosting-your-own-runners/using-labels-with-self-hosted-runners) customization
 
