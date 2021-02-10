@@ -10,3 +10,7 @@
 ## v3.0.1 (2020-02-08)
 
 - Fix runner user creation to have the habitual home folder path
+
+## v3.0.2 (2020-02-10)
+
+- Update runner to v2.277.1
