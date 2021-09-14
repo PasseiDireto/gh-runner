@@ -1,0 +1,11 @@
+name: Check GH Runner Without Provisioning a Self Hosted runner first
+on:
+  workflow_dispatch:
+jobs:
+  runs-dummy-action:
+    runs-on: self-hosted
+    needs: pre-job-test
+    container: python:3.9-slim
+    steps:
+    - uses: actions/checkout@v2
+    - run: python --version
