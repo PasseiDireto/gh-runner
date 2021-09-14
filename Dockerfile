@@ -49,10 +49,7 @@ RUN curl -Ls "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscl
 
 COPY startup.sh /usr/local/bin/
 
-# Add patched scripts from GHA runner (svc.sh and RunnerService.js)
-COPY --chown=runner:runner patched/ ./patched/
-
-RUN chmod +x ./patched/runsvc.sh /usr/local/bin/startup.sh
+RUN chmod +x /usr/local/bin/startup.sh 
 
 USER runner
 

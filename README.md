@@ -11,7 +11,7 @@ This image is available public at [Docker Hub](https://hub.docker.com/r/passeidi
 ```shell script
 cp .env-exemple .env # modify with your custom configuration, such as the PAT, Repostitory and Organization.
 
-docker run --runtime sysbox --name=gh-runner --rm  --env-file=.env passeidireto/gh-runner
+docker run --runtime sysbox-runc --name=gh-runner --rm  --env-file=.env passeidireto/gh-runner
 ```
 
 Note that the `runtime` option is needed only if you do not have sysbox as your default runtime. Just wait while it registers itself. You will see this output shortly:
@@ -80,9 +80,8 @@ The image has three basic components: the docker engine, runner dependencies and
 ![](./docs/img/runner-model.png)
 
 
-Users of this approach should bear in mind that technically the GHA Runner does not even support container execution, although that's something they (and the community) want and are [working into](https://github.com/actions/runner/labels/Runner%20%3Aheart%3A%20Container).
+Users of this approach should bear in mind that technically the GHA Runner does not even support container execution, although that's something they (and the community) want and are [working into](https://github.com/actions/runner/labels/Runner%20%3Aheart%3A%20Container). The `--ephemeral` flag [recently added](https://github.com/actions/runner/releases/tag/v2.282.0) allows that runners configure themselves as available for one and just one job execution, making it easier to remove (and unconfigure) the container right after its execution.
 
-Another quirk of this approach is that we patched a small portion of the runner using some of the [maintainers tips](https://github.com/actions/runner/issues/246#issuecomment-568638572) to refrain the runner of trying to self update. Since the original update behavior is slow and restarts the listener, our container would be in a endless loop of starting and killing itself. That's why we use a custom `runsvc.sh` to run the listener. You can see the altered files the `/patched` repository.
 
 Finally, we use [dumb-init](https://engineeringblog.yelp.com/2016/01/dumb-init-an-init-for-docker.html) to manage the service execution. The most important feature is to deal with the `SIGINT/SIGKILL` signals and [how docker reacts to them](https://www.ctl.io/developers/blog/post/gracefully-stopping-docker-containers/). With this approach we properly stop and unregister the listener in most of the scenarios, such as scale in and out, to work with platforms like (ECS/Fargate/EC2) and Kubernetes. Otherwise, the runner would hang forever as Offline on the repository/organization.
 

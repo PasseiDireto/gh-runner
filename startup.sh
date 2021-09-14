@@ -39,15 +39,11 @@ echo "Registering runner ${runner_id}"
   --token "$(generate_token)" \
   --url "${registration_url}" \
   --unattended \
-  --replace
+  --replace \
+  --ephemeral
 
 trap 'remove_runner; exit 130' SIGINT
 trap 'remove_runner; exit 143' SIGTERM
 
-for f in runsvc.sh RunnerService.js; do
-  mv bin/${f}{,.bak}
-  mv {patched,bin}/${f}
-done
 
-./bin/runsvc.sh --once "$*"
-remove_runner
+./run.sh "$*"
