@@ -1,7 +1,6 @@
 name: Check GH Runner Without Provisioning a Self Hosted runner first
 on:
   workflow_dispatch:
-  push:
 jobs:
   runs-dummy-action:
     runs-on: self-hosted
