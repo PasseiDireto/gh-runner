@@ -24,7 +24,7 @@ RUN useradd -m runner \
 
 # Build args
 ARG TARGETPLATFORM=amd64
-ARG RUNNER_VERSION=2.281.1
+ARG RUNNER_VERSION=2.282.0
 WORKDIR /runner
 
 # Runner download supports amd64 as x64
@@ -49,10 +49,7 @@ RUN curl -Ls "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscl
 
 COPY startup.sh /usr/local/bin/
 
-# Add patched scripts from GHA runner (svc.sh and RunnerService.js)
-COPY --chown=runner:runner patched/ ./patched/
-
-RUN chmod +x ./patched/runsvc.sh /usr/local/bin/startup.sh
+RUN chmod +x /usr/local/bin/startup.sh 
 
 USER runner
 
