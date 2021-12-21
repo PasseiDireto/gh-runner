@@ -9,7 +9,7 @@ GitHub Actions allows you to [host your own runners for actions](https://docs.gi
 This image is available public at [Docker Hub](https://hub.docker.com/r/passeidireto/gh-runner). To run it, you just need to:
 
 ```shell script
-cp .env-exemple .env # modify with your custom configuration, such as the PAT, Repostitory and Organization.
+cp .env-example .env # modify with your custom configuration, such as the PAT, Repostitory and Organization.
 
 docker run --runtime sysbox-runc --name=gh-runner --rm  --env-file=.env passeidireto/gh-runner
 ```
