@@ -13,6 +13,9 @@ else
 fi
 
 generate_token() {
+  local payload
+  local runner_token
+
   payload=$(curl -sX POST -H "Authorization: token ${GITHUB_PERSONAL_TOKEN}" "${auth_url}")
   runner_token=$(echo "${payload}" | jq .token --raw-output)
 
@@ -33,10 +36,16 @@ service docker status
 runner_id=${RUNNER_NAME}_$(openssl rand -hex 6)
 echo "Registering runner ${runner_id}"
 
+RUNNER_TOKEN=$(generate_token)
+test $? -ne 0 && {
+  echo "${RUNNER_TOKEN}"
+  exit 1
+}
+
 ./config.sh \
   --name "${runner_id}" \
   --labels "${RUNNER_LABELS}" \
-  --token "$(generate_token)" \
+  --token "${RUNNER_TOKEN}" \
   --url "${registration_url}" \
   --unattended \
   --replace \
@@ -44,6 +53,5 @@ echo "Registering runner ${runner_id}"
 
 trap 'remove_runner; exit 130' SIGINT
 trap 'remove_runner; exit 143' SIGTERM
-
 
 ./run.sh "$*"
