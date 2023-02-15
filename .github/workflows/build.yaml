@@ -28,12 +28,13 @@ jobs:
       - name: Find Git Tag
         run: echo "TAG=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
       - name: Docker Build and Push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           push: true
           tags: |
             ${{secrets.AWS_PROD_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_DEFAULT_REGION}}.amazonaws.com/gh-runner:latest
             ${{secrets.AWS_PROD_ACCOUNT_ID}}.dkr.ecr.${{secrets.AWS_DEFAULT_REGION}}.amazonaws.com/gh-runner:${{ env.TAG }}
+
   build_push_docker_hub:
     name: Push image Docker Hub
     runs-on: ubuntu-latest
@@ -50,12 +51,13 @@ jobs:
       - name: Find Git Tag
         run: echo "TAG=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
       - name: Docker Build and Push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           push: true
           tags: |
             passeidireto/gh-runner:latest
             passeidireto/gh-runner:${{ env.TAG }}
+
   trigger-test-workflow:
     name: Triggers simple test workflow to ensure everything still working as expected
     runs-on: ubuntu-latest

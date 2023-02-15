@@ -25,7 +25,8 @@ jobs:
           github_pat: ${{ secrets.PD_GITHUB2_PAT }}
           task_definition: "gh-runner"
           cluster: "gh-runner"
-          task_count: 4
+          task_count: 3
+
   runs-dummy-action:
     runs-on: self-hosted
     strategy:
