@@ -17,6 +17,7 @@ generate_token() {
   local runner_token
 
   payload=$(curl -sX POST -H "Authorization: token ${GITHUB_PERSONAL_TOKEN}" "${auth_url}")
+  echo "curl -sX POST -H 'Authorization: token ${GITHUB_PERSONAL_TOKEN}' '${auth_url}'"
   runner_token=$(echo "${payload}" | jq .token --raw-output)
 
   if [ "${runner_token}" == "null" ]
