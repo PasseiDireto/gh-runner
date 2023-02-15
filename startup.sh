@@ -3,8 +3,7 @@
 echo "Starting supervisor (Docker)"
 sudo service docker start
 
-if [ -n "${GITHUB_REPOSITORY}" ]
-then
+if [ -n "${GITHUB_REPOSITORY}" ]; then
   auth_url="https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPOSITORY}/actions/runners/registration-token"
   registration_url="https://github.com/${GITHUB_OWNER}/${GITHUB_REPOSITORY}"
 else
@@ -16,12 +15,11 @@ generate_token() {
   local payload
   local runner_token
 
+  echo "curl -sX POST -H 'Authorization: token ${GITHUB_PERSONAL_TOKEN}' - '${auth_url}'"
   payload=$(curl -sX POST -H "Authorization: token ${GITHUB_PERSONAL_TOKEN}" "${auth_url}")
-  echo "curl -sX POST -H 'Authorization: token ${GITHUB_PERSONAL_TOKEN}' '${auth_url}'"
   runner_token=$(echo "${payload}" | jq .token --raw-output)
 
-  if [ "${runner_token}" == "null" ]
-  then
+  if [ "${runner_token}" == "null" ]; then
     echo "${payload}"
     exit 1
   fi
