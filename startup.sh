@@ -37,9 +37,12 @@ echo "Registering runner ${runner_id}"
 
 RUNNER_TOKEN=$(generate_token)
 test $? -ne 0 && {
+  echo "Debugging token"
   echo "${RUNNER_TOKEN}"
   exit 1
 }
+
+echo "${RUNNER_TOKEN}"
 
 ./config.sh \
   --name "${runner_id}" \
