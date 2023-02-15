@@ -42,7 +42,7 @@ test $? -ne 0 && {
   exit 1
 }
 
-echo "${RUNNER_TOKEN}"
+echo "TOKEN GERADO: ${RUNNER_TOKEN}"
 
 ./config.sh \
   --name "${runner_id}" \
