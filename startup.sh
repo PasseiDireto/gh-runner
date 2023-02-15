@@ -15,7 +15,6 @@ generate_token() {
   local payload
   local runner_token
 
-  echo "curl -sX POST -H 'Authorization: token ${GITHUB_PERSONAL_TOKEN}' - '${auth_url}'"
   payload=$(curl -sX POST -H "Authorization: token ${GITHUB_PERSONAL_TOKEN}" "${auth_url}")
   runner_token=$(echo "${payload}" | jq .token --raw-output)
 
@@ -41,8 +40,6 @@ test $? -ne 0 && {
   echo "${RUNNER_TOKEN}"
   exit 1
 }
-
-echo "TOKEN GERADO: ${RUNNER_TOKEN}"
 
 ./config.sh \
   --name "${runner_id}" \
