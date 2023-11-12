@@ -25,7 +25,7 @@ RUN useradd -m runner \
 
 # Build args
 ARG TARGETPLATFORM=amd64
-ARG RUNNER_VERSION=2.293.0
+ARG RUNNER_VERSION=2.311.0
 WORKDIR /runner
 
 # Runner download supports amd64 as x64
@@ -44,9 +44,9 @@ RUN export ARCH=$(echo ${TARGETPLATFORM} | cut -d / -f2) \
 
 #AWS client
 RUN curl -Ls "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip \
- && unzip awscliv2.zip \
- && ./aws/install \
- && rm -rf awscliv2.zip
+    && unzip awscliv2.zip \
+    && ./aws/install \
+    && rm -rf awscliv2.zip
 
 COPY startup.sh /usr/local/bin/
 

@@ -1,13 +1,16 @@
 name: Watch for updates on GitHub Runner
+
 on:
   schedule:
-    - cron:  '0 1 * * *'
+    - cron: "0 1 * * *"
   workflow_dispatch:
+
 jobs:
   check-new-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout the code
+        uses: actions/checkout@v3
       - name: Get CURRENT (from file) and NEW (pro GH's API) versions of the runner
         run: |
           echo "NEW_VERSION=$(curl -s "https://api.github.com/repos/actions/runner/releases/latest" | jq --raw-output '.tag_name' | tr -d v)" >> $GITHUB_ENV
@@ -21,10 +24,10 @@ jobs:
           echo 'EOF' >> $GITHUB_ENV
       - name: Open a new PR
         if: ${{ env.NEW_VERSION != env.CURRENT_VERSION }}
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v4
         with:
           commit-message: Update GH Runner from ${{ env.CURRENT_VERSION }} to ${{ env.NEW_VERSION }}
-          title:  "Update GH Runner from ${{ env.CURRENT_VERSION }} to  ${{ env.NEW_VERSION }}"
+          title: "Update GH Runner from ${{ env.CURRENT_VERSION }} to  ${{ env.NEW_VERSION }}"
           branch: "update-runner-${{ env.NEW_VERSION }}"
           body: ${{ env.PR_BODY }}
           delete-branch: true

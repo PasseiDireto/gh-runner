@@ -1,35 +1,41 @@
 name: Check GH Runner
+
 on:
   workflow_dispatch:
   repository_dispatch:
-    types: [ successful_release ]
+    types: [successful_release]
+
 jobs:
   pre-job-test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-        role-to-assume: ${{ secrets.AWS_ECS_RUN_TASK_ROLE }}
-        role-duration-seconds: 900
-    - name: Provide a self hosted to execute this job
-      uses: PasseiDireto/gh-runner-task-action@main
-      with:
-        github_pat: ${{ secrets.PD_BOT_GITHUB_ACCESS_TOKEN }}
-        task_definition: 'gh-runner'
-        cluster: 'gh-runner'
-        task_count: 4
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+          role-to-assume: ${{ secrets.AWS_ECS_RUN_TASK_ROLE }}
+          role-duration-seconds: 900
+      - name: Provide a self hosted to execute this job
+        uses: PasseiDireto/gh-runner-task-action@main
+        with:
+          github_pat: ${{ secrets.PD_BOT_GITHUB_ACCESS_TOKEN }}
+          task_definition: "gh-runner"
+          cluster: "gh-runner"
+          task_count: 3
+
   runs-dummy-action:
     runs-on: self-hosted
     strategy:
       fail-fast: false
       matrix:
-          version: [3.7, 3.8, 3.9, 3.9]
+        version: [3.7, 3.8, 3.9]
     needs: pre-job-test
     container: python:${{ matrix.version }}-slim
     steps:
-    - uses: actions/checkout@v2
-    - run: python --version
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - run: python --version
