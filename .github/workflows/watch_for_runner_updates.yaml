@@ -31,5 +31,5 @@ jobs:
           branch: "update-runner-${{ env.NEW_VERSION }}"
           body: ${{ env.PR_BODY }}
           delete-branch: true
-          reviewers: "drigos,mat-machado"
-          assignees: "drigos,mat-machado"
+          reviewers: "drigos,py-paulo"
+          assignees: "drigos,py-paulo"
