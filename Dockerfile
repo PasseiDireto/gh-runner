@@ -1,4 +1,4 @@
-FROM nestybox/ubuntu-focal-systemd-docker
+FROM nestybox/ubuntu-noble-systemd-docker
 
 # Extra deps for GHA Runner
 ENV DEBIAN_FRONTEND=noninteractive
